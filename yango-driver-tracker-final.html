@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#00A651">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>YANGO Cash</title>
+    <link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjoiWUFOR08gRHJpdmVyIFRyYWNrZXIiLCJzaG9ydF9uYW1lIjoiWUFOR08gVHJhY2tlciIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMTExODI3IiwidGhlbWVfY29sb3IiOiIjMDBBNjUxIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiMwMEE2NTEiPjxwYXRoIGQ9Ik0xOCA0aC0xVjJjMC0uNTUtLjQ1LTEtMS0xSDhDNi40NSAxIDYgMS40NSA2IDJ2Mkg1Yy0xLjEgMC0yIC45LTIgMnYxNGMwIDEuMS45IDIgMiAyaDE0YzEuMSAwIDItLjkgMi0yVjZjMC0xLjEtLjktMi0yLTJ6bS02IDB2MUg4VjRoNFoiLz48cGF0aCBkPSJNMTggMTJIOFYxMGgxMHYyem0wIDRIOFYxNGgxMHYyem0wIDRIOFYxOGgxMHYyIi8+PC9zdmc+In0sInNpemVzIjoiMTkyeDE5MiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Poppins:wght@500;600&amp;display=swap');
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .header-font { font-family: 'Poppins', system_ui, sans-serif; font-weight: 600; }
+        .app-container { max-width: 480px; margin: 0 auto; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+        .metric-value { font-size: 1.85rem; line-height: 1.1; font-weight: 700; }
+        .login-screen { background: linear-gradient(135deg, #111827 0%, #0f172a 100%); }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200">
+
+    <!-- LOGIN / SIGNUP SCREEN -->
+    <div id="login-screen" class="login-screen min-h-screen flex items-center justify-center px-6">
+        <div class="w-full max-w-sm">
+            <div class="flex justify-center mb-8">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-12 h-12 bg-[#00A651] rounded-3xl flex items-center justify-center">
+                        <i class="fa-solid fa-car text-white text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="header-font text-4xl font-semibold tracking-tighter">YANGO</h1>
+                        <p class="text-xs text-zinc-400 -mt-1 ml-0.5">Follow Cash</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-7">
+                <div class="flex mb-6 border-b border-zinc-700">
+                    <div onclick="switchAuthTab('login')" id="tab-login"
+                         class="flex-1 text-center py-3 font-medium cursor-pointer border-b-2 border-[#00A651] text-[#00A651]">
+                        Login
+                    </div>
+                    <div onclick="switchAuthTab('signup')" id="tab-signup"
+                         class="flex-1 text-center py-3 font-medium cursor-pointer text-zinc-400">
+                        Sign Up
+                    </div>
+                </div>
+
+                <!-- LOGIN -->
+                <form id="login-form" onsubmit="loginUser(event)">
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-zinc-400 mb-1.5">USERNAME</label>
+                        <input type="text" id="login-username" required placeholder="driver_mbal" 
+                               class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm focus:outline-none">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-xs font-medium text-zinc-400 mb-1.5">PASSWORD</label>
+                        <input type="password" id="login-password" required placeholder="••••••••" 
+                               class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-[#00A651] hover:bg-emerald-600 transition-colors font-semibold rounded-3xl">Login</button>
+                </form>
+
+                <!-- SIGNUP -->
+                <form id="signup-form" onsubmit="signupUser(event)" class="hidden">
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-zinc-400 mb-1.5">USERNAME</label>
+                        <input type="text" id="signup-username" required placeholder="driver_mbal" 
+                               class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm focus:outline-none">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-xs font-medium text-zinc-400 mb-1.5">PASSWORD</label>
+                        <input type="password" id="signup-password" required placeholder="••••••••" 
+                               class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm focus:outline-none">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-xs font-medium text-zinc-400 mb-1.5">CONFIRM PASSWORD</label>
+                        <input type="password" id="signup-confirm" required placeholder="••••••••" 
+                               class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm focus:outline-none">
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-[#00A651] hover:bg-emerald-600 transition-colors font-semibold rounded-3xl">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="main-app" class="hidden app-container min-h-screen bg-zinc-900 mx-auto">
+        
+        <!-- Header -->
+        <div class="bg-zinc-900 border-b border-zinc-800 px-4 py-4 flex items-center justify-between sticky top-0 z-50">
+            <div class="flex items-center gap-x-3">
+                <div class="w-9 h-9 bg-[#00A651] rounded-2xl flex items-center justify-center">
+                    <i class="fa-solid fa-car text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="header-font text-2xl font-semibold tracking-tighter">YANGO</h1>
+                    <p class="text-[10px] text-zinc-400 -mt-1">Driver Tracker • CM</p>
+                </div>
+            </div>
+            <div onclick="showUserProfile()" class="cursor-pointer flex items-center gap-x-2 bg-zinc-800 px-3 py-1.5 rounded-3xl text-sm">
+                <span id="user-name-header" class="font-medium"></span>
+                <i class="fa-solid fa-user text-xs text-zinc-400"></i>
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section active px-4 pt-5 pb-20">
+            <div class="flex justify-between items-end mb-5 px-1">
+                <div>
+                    <p class="text-zinc-400 text-sm">Today • <span id="today-date"></span></p>
+                    <h2 class="text-3xl font-semibold tracking-tighter">Good morning</h2>
+                </div>
+                <div onclick="showSection('add-income')" class="cursor-pointer bg-[#00A651] hover:bg-emerald-600 transition-colors px-4 py-2 text-sm font-medium flex items-center gap-x-2 rounded-3xl">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="font-semibold">Add</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 mb-5">
+                <div class="bg-zinc-800 border border-zinc-700 rounded-3xl p-4">
+                    <div class="flex items-center gap-x-2 mb-1">
+                        <i class="fa-solid fa-taxi text-emerald-400"></i>
+                        <span class="text-xs font-medium text-emerald-300">YANGO DIRECT</span>
+                    </div>
+                    <div id="today-yango" class="metric-value text-emerald-400">0</div>
+                    <div class="text-xs text-zinc-400">XAF</div>
+                </div>
+                <div class="bg-zinc-800 border border-zinc-700 rounded-3xl p-4">
+                    <div class="flex items-center gap-x-2 mb-1">
+                        <i class="fa-solid fa-user text-blue-400"></i>
+                        <span class="text-xs font-medium text-blue-300">PERSONAL</span>
+                    </div>
+                    <div id="today-personal" class="metric-value text-blue-400">0</div>
+                    <div class="text-xs text-zinc-400">XAF</div>
+                </div>
+            </div>
+
+            <div class="bg-zinc-800 border border-zinc-700 rounded-3xl p-4 mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-xs font-medium text-zinc-400">NET TODAY</span>
+                        <div id="today-net" class="text-3xl font-bold">0</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-zinc-400">Expenses</div>
+                        <div id="today-expenses" class="font-semibold text-red-400">0 XAF</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-1 mb-2 flex justify-between items-center">
+                <span class="font-medium text-sm">This Week</span>
+                <span onclick="showSection('reports')" class="text-[#00A651] text-xs cursor-pointer font-medium">View Reports →</span>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2 mb-5">
+                <div class="bg-zinc-800 px-3 py-3 rounded-3xl text-center">
+                    <div id="week-total" class="font-semibold">0</div>
+                    <div class="text-[10px] text-zinc-400">Income</div>
+                </div>
+                <div class="bg-zinc-800 px-3 py-3 rounded-3xl text-center">
+                    <div id="week-expenses" class="font-semibold">0</div>
+                    <div class="text-[10px] text-zinc-400">Expenses</div>
+                </div>
+                <div class="bg-zinc-800 px-3 py-3 rounded-3xl text-center">
+                    <div id="week-net" class="font-semibold text-emerald-400">0</div>
+                    <div class="text-[10px] text-zinc-400">Net</div>
+                </div>
+            </div>
+
+            <div class="px-1">
+                <div onclick="showSection('multiple-days')" class="cursor-pointer flex items-center justify-between px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-3xl">
+                    <div class="flex items-center gap-x-3">
+                        <i class="fa-solid fa-calendar-days text-zinc-400"></i>
+                        <span class="font-medium">Multiple Days View</span>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-zinc-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD INCOME -->
+        <div id="add-income" class="section px-4 pt-5 pb-8">
+            <div class="flex items-center justify-between mb-5">
+                <button onclick="showSection('dashboard')" class="text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+                </button>
+                <span class="font-semibold text-lg">Add Income</span>
+            </div>
+
+            <form id="income-form" onsubmit="addIncome(event)">
+                <div class="mb-5">
+                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">INCOME TYPE</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div onclick="selectIncomeType(this, 'yango')" id="type-yango"
+                             class="cursor-pointer border border-emerald-800 bg-emerald-950 hover:bg-emerald-900 transition-colors px-4 py-3 rounded-3xl flex items-center justify-center gap-x-2 text-sm font-medium">
+                            <i class="fa-solid fa-taxi"></i> <span>YANGO Direct</span>
+                        </div>
+                        <div onclick="selectIncomeType(this, 'personal')" id="type-personal"
+                             class="cursor-pointer border border-blue-800 bg-blue-950 hover:bg-blue-900 transition-colors px-4 py-3 rounded-3xl flex items-center justify-center gap-x-2 text-sm font-medium">
+                            <i class="fa-solid fa-user"></i> <span>Personal</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">AMOUNT (XAF)</label>
+                    <input type="number" id="income-amount" required placeholder="2500" class="w-full px-4 py-4 bg-zinc-800 border border-zinc-700 text-xl font-semibold rounded-3xl">
+                    <div class="flex gap-2 mt-2">
+                        <div onclick="quickAmount(1000,'income-amount')" class="cursor-pointer px-3 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded-3xl">1,000</div>
+                        <div onclick="quickAmount(2500,'income-amount')" class="cursor-pointer px-3 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded-3xl">2,500</div>
+                        <div onclick="quickAmount(5000,'income-amount')" class="cursor-pointer px-3 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded-3xl">5,000</div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">NOTES</label>
+                    <input type="text" id="income-notes" placeholder="Melen → Nlongkak" class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm">
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-[#00A651] hover:bg-emerald-600 transition-colors font-semibold rounded-3xl flex items-center justify-center gap-x-2">
+                    <i class="fa-solid fa-check"></i> <span>Save Income</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- ADD EXPENSE -->
+        <div id="add-expense" class="section px-4 pt-5 pb-8">
+            <div class="flex items-center justify-between mb-5">
+                <button onclick="showSection('dashboard')" class="text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+                </button>
+                <span class="font-semibold text-lg">Add Expense</span>
+            </div>
+
+            <form id="expense-form" onsubmit="addExpense(event)">
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">CATEGORY</label>
+                    <select id="expense-category" required class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm">
+                        <option value="">Select category</option>
+                        <option value="Fuel">⛽ Fuel</option>
+                        <option value="Maintenance">🔧 Maintenance</option>
+                        <option value="Food">🍲 Food &amp; Drinks</option>
+                        <option value="Tolls">🛣️ Tolls &amp; Parking</option>
+                        <option value="Other">📦 Other</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">AMOUNT (XAF)</label>
+                    <input type="number" id="expense-amount" required placeholder="3500" class="w-full px-4 py-4 bg-zinc-800 border border-zinc-700 text-xl font-semibold rounded-3xl">
+                    <div class="flex gap-2 mt-2">
+                        <div onclick="quickAmount(1500,'expense-amount')" class="cursor-pointer px-3 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded-3xl">1,500</div>
+                        <div onclick="quickAmount(3000,'expense-amount')" class="cursor-pointer px-3 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded-3xl">3,000</div>
+                        <div onclick="quickAmount(5000,'expense-amount')" class="cursor-pointer px-3 py-1 text-xs bg-zinc-800 border border-zinc-700 rounded-3xl">5,000</div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-xs font-medium text-zinc-400 mb-1.5">NOTES</label>
+                    <input type="text" id="expense-notes" placeholder="20L petrol" class="w-full px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl text-sm">
+                </div>
+
+                <button type="submit" class="w-full py-3.5 bg-red-600 hover:bg-red-700 transition-colors font-semibold rounded-3xl flex items-center justify-center gap-x-2">
+                    <i class="fa-solid fa-check"></i> <span>Save Expense</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- MULTIPLE DAYS VIEW -->
+        <div id="multiple-days" class="section px-4 pt-5 pb-8">
+            <div class="flex items-center justify-between mb-5">
+                <button onclick="showSection('dashboard')" class="text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+                </button>
+                <span class="font-semibold text-lg">Last 14 Days</span>
+            </div>
+            <div id="multiple-days-list" class="space-y-3"></div>
+        </div>
+
+        <!-- REPORTS -->
+        <div id="reports" class="section px-4 pt-5 pb-8">
+            <div class="flex items-center justify-between mb-5">
+                <button onclick="showSection('dashboard')" class="text-zinc-400 hover:text-white flex items-center gap-x-2 text-sm">
+                    <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+                </button>
+                <span class="font-semibold text-lg">Reports</span>
+            </div>
+
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <span class="font-medium">Daily Report</span>
+                    <input type="date" id="daily-date" onchange="showDailyReport()" class="bg-zinc-800 border border-zinc-700 text-sm px-3 py-1 rounded-2xl text-xs">
+                </div>
+                <div id="daily-report-content" class="bg-zinc-800 border border-zinc-700 rounded-3xl p-4 text-sm">
+                    <div class="text-center text-zinc-400 py-4">Select a date above</div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <span class="font-medium">Weekly Report</span>
+                    <span class="text-xs px-2 py-0.5 bg-zinc-700 rounded-2xl">Last 7 days</span>
+                </div>
+                <div id="weekly-report-content" class="bg-zinc-800 border border-zinc-700 rounded-3xl p-4"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-zinc-900 border-t border-zinc-700 px-2 py-2 flex justify-around z-50">
+            <div onclick="showSection('dashboard')" class="cursor-pointer flex flex-col items-center px-5 py-1 text-xs">
+                <i class="fa-solid fa-home text-xl mb-0.5"></i>
+                <span class="text-[10px]">Home</span>
+            </div>
+            <div onclick="showSection('add-income')" class="cursor-pointer flex flex-col items-center px-5 py-1 text-xs">
+                <i class="fa-solid fa-plus-circle text-xl mb-0.5 text-[#00A651]"></i>
+                <span class="text-[10px]">Income</span>
+            </div>
+            <div onclick="showSection('add-expense')" class="cursor-pointer flex flex-col items-center px-5 py-1 text-xs">
+                <i class="fa-solid fa-minus-circle text-xl mb-0.5 text-red-400"></i>
+                <span class="text-[10px]">Expense</span>
+            </div>
+            <div onclick="showSection('reports')" class="cursor-pointer flex flex-col items-center px-5 py-1 text-xs">
+                <i class="fa-solid fa-chart-bar text-xl mb-0.5"></i>
+                <span class="text-[10px]">Reports</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let entries = [];
+        let currentUser = null;
+
+        // ==================== PWA ====================
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                    self.addEventListener('install', e => self.skipWaiting());
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+                    });
+                `)).catch(() => {});
+            }
+        }
+
+        // ==================== AUTH ====================
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const tabLogin = document.getElementById('tab-login');
+            const tabSignup = document.getElementById('tab-signup');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                tabLogin.classList.add('border-b-2', 'border-[#00A651]', 'text-[#00A651]');
+                tabLogin.classList.remove('text-zinc-400');
+                tabSignup.classList.remove('border-b-2', 'border-[#00A651]', 'text-[#00A651]');
+                tabSignup.classList.add('text-zinc-400');
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                tabSignup.classList.add('border-b-2', 'border-[#00A651]', 'text-[#00A651]');
+                tabSignup.classList.remove('text-zinc-400');
+                tabLogin.classList.remove('border-b-2', 'border-[#00A651]', 'text-[#00A651]');
+                tabLogin.classList.add('text-zinc-400');
+            }
+        }
+
+        function signupUser(e) {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+
+            if (password !== confirm) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('yangoUsers') || '[]');
+            if (users.find(u => u.username === username)) {
+                alert("Username already taken!");
+                return;
+            }
+
+            users.push({ username, password, created: new Date().toISOString() });
+            localStorage.setItem('yangoUsers', JSON.stringify(users));
+
+            currentUser = { username };
+            localStorage.setItem('yangoCurrentUser', JSON.stringify(currentUser));
+
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('user-name-header').innerHTML = username;
+
+            loadUserData();
+            updateDashboard();
+        }
+
+        function loginUser(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            let users = JSON.parse(localStorage.getItem('yangoUsers') || '[]');
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (!user) {
+                alert("Invalid username or password");
+                return;
+            }
+
+            currentUser = { username };
+            localStorage.setItem('yangoCurrentUser', JSON.stringify(currentUser));
+
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('user-name-header').innerHTML = username;
+
+            loadUserData();
+            updateDashboard();
+        }
+
+        function checkExistingLogin() {
+            const savedUser = localStorage.getItem('yangoCurrentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('user-name-header').innerHTML = currentUser.username;
+                loadUserData();
+                updateDashboard();
+            }
+        }
+
+        function showUserProfile() {
+            if (!currentUser) return;
+            
+            const choice = prompt(
+                `Logged in as: ${currentUser.username}\n\n` +
+                `1 = Export Data\n` +
+                `2 = Import Data\n` +
+                `3 = Change Password\n` +
+                `4 = Logout`
+            );
+            
+            if (choice === '1') exportData();
+            else if (choice === '2') importData();
+            else if (choice === '3') changePassword();
+            else if (choice === '4') logoutUser();
+        }
+
+        function logoutUser() {
+            localStorage.removeItem('yangoCurrentUser');
+            location.reload();
+        }
+
+        // ==================== PASSWORD CHANGE ====================
+        function changePassword() {
+            const currentPass = prompt("Enter your current password:");
+            if (!currentPass) return;
+
+            let users = JSON.parse(localStorage.getItem('yangoUsers') || '[]');
+            const userIndex = users.findIndex(u => u.username === currentUser.username);
+
+            if (!userIndex || users[userIndex].password !== currentPass) {
+                alert("Incorrect current password!");
+                return;
+            }
+
+            const newPass = prompt("Enter new password:");
+            if (!newPass) return;
+
+            const confirmNew = prompt("Confirm new password:");
+            if (newPass !== confirmNew) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            users[userIndex].password = newPass;
+            localStorage.setItem('yangoUsers', JSON.stringify(users));
+            alert("Password changed successfully!");
+        }
+
+        // ==================== EXPORT / IMPORT ====================
+        function exportData() {
+            const data = {
+                username: currentUser.username,
+                exportedAt: new Date().toISOString(),
+                entries: entries
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `yango-backup-${currentUser.username}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert("Backup exported successfully!");
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (!data.entries) {
+                            alert("Invalid backup file");
+                            return;
+                        }
+                        entries = data.entries;
+                        saveUserData();
+                        alert("Data imported successfully!");
+                        updateDashboard();
+                    } catch {
+                        alert("Failed to import backup.");
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // ==================== DATA ====================
+        function loadUserData() {
+            if (!currentUser) return;
+            const key = `yangoEntries_${currentUser.username}`;
+            const saved = localStorage.getItem(key);
+            entries = saved ? JSON.parse(saved) : [];
+        }
+
+        function saveUserData() {
+            if (!currentUser) return;
+            const key = `yangoEntries_${currentUser.username}`;
+            localStorage.setItem(key, JSON.stringify(entries));
+        }
+
+        // ==================== TRANSACTIONS WITH TIMESTAMP ====================
+        function addIncome(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('income-amount').value);
+            if (!amount) return;
+
+            const notes = document.getElementById('income-notes').value.trim();
+            let incomeType = document.getElementById('type-personal').classList.contains('!border-blue-400') ? 'personal' : 'yango';
+
+            entries.unshift({
+                id: Date.now(),
+                type: 'income',
+                incomeType,
+                amount,
+                date: new Date().toISOString().split('T')[0],
+                timestamp: new Date().toISOString(),   // ← AUTOMATIC TIMESTAMP
+                notes
+            });
+
+            saveUserData();
+            document.getElementById('income-form').reset();
+            document.getElementById('type-yango').classList.remove('!border-emerald-400', 'ring-1', 'ring-emerald-400');
+            document.getElementById('type-personal').classList.remove('!border-blue-400', 'ring-1', 'ring-blue-400');
+            
+            alert('Income saved!');
+            showSection('dashboard');
+        }
+
+        function addExpense(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const category = document.getElementById('expense-category').value;
+            const notes = document.getElementById('expense-notes').value.trim();
+            if (!amount || !category) return;
+
+            entries.unshift({
+                id: Date.now(),
+                type: 'expense',
+                category,
+                amount,
+                date: new Date().toISOString().split('T')[0],
+                timestamp: new Date().toISOString(),   // ← AUTOMATIC TIMESTAMP
+                notes
+            });
+
+            saveUserData();
+            document.getElementById('expense-form').reset();
+            alert('Expense saved!');
+            showSection('dashboard');
+        }
+
+        // ==================== DASHBOARD & REPORTS ====================
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayEntries = entries.filter(e => e.date === today);
+
+            let yango = 0, personal = 0, expenses = 0;
+            todayEntries.forEach(e => {
+                if (e.type === 'income') {
+                    e.incomeType === 'yango' ? yango += e.amount : personal += e.amount;
+                } else expenses += e.amount;
+            });
+
+            const net = yango + personal - expenses;
+
+            document.getElementById('today-yango').innerHTML = yango.toLocaleString();
+            document.getElementById('today-personal').innerHTML = personal.toLocaleString();
+            document.getElementById('today-expenses').innerHTML = expenses.toLocaleString() + ' XAF';
+            document.getElementById('today-net').innerHTML = (net >= 0 ? '' : '-') + Math.abs(net).toLocaleString();
+            document.getElementById('today-net').className = `text-3xl font-bold ${net >= 0 ? '' : 'text-red-400'}`;
+
+            const weekStart = new Date();
+            weekStart.setDate(weekStart.getDate() - 6);
+            const weekStartStr = weekStart.toISOString().split('T')[0];
+
+            let wIncome = 0, wExp = 0;
+            entries.forEach(e => {
+                if (e.date >= weekStartStr) {
+                    if (e.type === 'income') wIncome += e.amount;
+                    else wExp += e.amount;
+                }
+            });
+
+            document.getElementById('week-total').innerHTML = wIncome.toLocaleString();
+            document.getElementById('week-expenses').innerHTML = wExp.toLocaleString();
+            document.getElementById('week-net').innerHTML = (wIncome - wExp).toLocaleString();
+        }
+
+        function renderMultipleDays() {
+            const container = document.getElementById('multiple-days-list');
+            container.innerHTML = '';
+
+            const today = new Date();
+            for (let i = 0; i < 14; i++) {
+                const date = new Date(today);
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+
+                const dayEntries = entries.filter(e => e.date === dateStr);
+                let yango = 0, personal = 0, exp = 0;
+
+                dayEntries.forEach(e => {
+                    if (e.type === 'income') {
+                        e.incomeType === 'yango' ? yango += e.amount : personal += e.amount;
+                    } else exp += e.amount;
+                });
+
+                const net = yango + personal - exp;
+
+                const div = document.createElement('div');
+                div.className = `px-4 py-3.5 bg-zinc-800 border border-zinc-700 rounded-3xl flex items-center justify-between`;
+                div.innerHTML = `
+                    <div>
+                        <div class="font-medium">${date.toLocaleDateString('fr-FR', {weekday:'short', month:'short', day:'numeric'})}</div>
+                        <div class="text-xs text-zinc-400">${dayEntries.length} transactions</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-semibold ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}">${net >= 0 ? '+' : ''}${net.toLocaleString()}</div>
+                        <div class="text-xs text-zinc-400">XAF net</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function showDailyReport() {
+            const date = document.getElementById('daily-date').value;
+            if (!date) return;
+
+            const dayEntries = entries.filter(e => e.date === date);
+            const container = document.getElementById('daily-report-content');
+
+            let yango = 0, personal = 0, exp = 0;
+            dayEntries.forEach(e => {
+                if (e.type === 'income') {
+                    e.incomeType === 'yango' ? yango += e.amount : personal += e.amount;
+                } else exp += e.amount;
+            });
+
+            const net = yango + personal - exp;
+
+            container.innerHTML = `
+                <div class="grid grid-cols-3 gap-4 text-center mb-4">
+                    <div><div class="text-emerald-400 text-xs">YANGO</div><div class="font-semibold">${yango.toLocaleString()}</div></div>
+                    <div><div class="text-blue-400 text-xs">PERSONAL</div><div class="font-semibold">${personal.toLocaleString()}</div></div>
+                    <div><div class="text-red-400 text-xs">EXPENSES</div><div class="font-semibold">${exp.toLocaleString()}</div></div>
+                </div>
+                <div class="border-t border-zinc-700 pt-3 text-center">
+                    <span class="text-xs text-zinc-400">NET PROFIT</span>
+                    <div class="font-bold text-xl ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}">${net.toLocaleString()} XAF</div>
+                </div>
+            `;
+        }
+
+        function showWeeklyReport() {
+            const container = document.getElementById('weekly-report-content');
+            const today = new Date();
+            const weekStart = new Date(today);
+            weekStart.setDate(today.getDate() - 6);
+            const weekStartStr = weekStart.toISOString().split('T')[0];
+
+            let totalIncome = 0, totalExpenses = 0, yangoTotal = 0, personalTotal = 0;
+
+            entries.forEach(e => {
+                if (e.date >= weekStartStr) {
+                    if (e.type === 'income') {
+                        totalIncome += e.amount;
+                        e.incomeType === 'yango' ? yangoTotal += e.amount : personalTotal += e.amount;
+                    } else {
+                        totalExpenses += e.amount;
+                    }
+                }
+            });
+
+            const net = totalIncome - totalExpenses;
+
+            container.innerHTML = `
+                <div class="grid grid-cols-2 gap-x-6 mb-5">
+                    <div><div class="text-xs text-emerald-400 mb-px">YANGO Direct</div><div class="text-xl font-semibold">${yangoTotal.toLocaleString()}</div></div>
+                    <div><div class="text-xs text-blue-400 mb-px">Personal</div><div class="text-xl font-semibold">${personalTotal.toLocaleString()}</div></div>
+                </div>
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between"><span>Total Income</span> <span class="font-medium">${totalIncome.toLocaleString()} XAF</span></div>
+                    <div class="flex justify-between"><span>Total Expenses</span> <span class="font-medium">${totalExpenses.toLocaleString()} XAF</span></div>
+                    <div class="flex justify-between pt-2 border-t border-zinc-700"><span class="font-medium">Net Profit</span> <span class="font-bold text-lg ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}">${net.toLocaleString()} XAF</span></div>
+                </div>
+            `;
+        }
+
+        function initializeApp() {
+            registerServiceWorker();
+            checkExistingLogin();
+
+            const dateEl = document.getElementById('today-date');
+            if (dateEl) dateEl.innerHTML = new Date().toLocaleDateString('fr-FR', { weekday: 'short', month: 'short', day: 'numeric' });
+
+            setTimeout(() => {
+                const yangoEl = document.getElementById('type-yango');
+                if (yangoEl) yangoEl.classList.add('!border-emerald-400', 'ring-1', 'ring-emerald-400');
+            }, 400);
+        }
+
+        window.onload = initializeApp;
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1aff9d05fa9ef48',t:'MTc4NDAyNjMyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
